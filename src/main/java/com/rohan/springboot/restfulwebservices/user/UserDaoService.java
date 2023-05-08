@@ -20,13 +20,23 @@ public class UserDaoService {
         return users;
     }
 
-    public User findOne(Integer id) throws Exception {
-        return users.stream().filter(x -> x.getId().equals(id)).findFirst().orElseThrow(Exception::new);
+    public User findOne(Integer id) {
+        return users.stream().filter(x -> x.getId().equals(id)).findFirst().orElseThrow(() -> new UserNotFoundException("User not found"));
     }
 
     public User save(User user) {
         user.setId(++userCount);
         users.add(user);
+        return user;
+    }
+
+    public User deleteById(Integer id) {
+        User user = users.stream()
+                .filter(x -> x.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        users.remove(user);
         return user;
     }
 }

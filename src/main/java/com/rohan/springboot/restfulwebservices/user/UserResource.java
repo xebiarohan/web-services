@@ -1,6 +1,7 @@
 package com.rohan.springboot.restfulwebservices.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -24,7 +25,7 @@ public class UserResource {
     }
 
     @GetMapping("/users/{id}")
-    public User getUsers(@PathVariable Integer id) throws Exception {
+    public User getUsers(@PathVariable Integer id) {
         return userDaoService.findOne(id);
     }
 
@@ -36,5 +37,11 @@ public class UserResource {
                 .buildAndExpand(createdUser.getId()).toUri();
         return ResponseEntity.created(location).build();
         //return userDaoService.save(user);
+    }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<User> deleteUser(@PathVariable Integer id) {
+        User deletedUser = userDaoService.deleteById(id);
+        return new ResponseEntity<>(deletedUser, HttpStatus.OK);
     }
 }
