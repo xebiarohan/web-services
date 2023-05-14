@@ -1,8 +1,9 @@
 package com.rohan.springboot.restfulwebservices.filtering;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFilter;
 
+@JsonFilter("SomeBeanFilter")
 public class SomeBean {
 
     private String field1;
@@ -11,7 +12,7 @@ public class SomeBean {
      * We can use @JsonIgnoreProperties instead of using @JsonIgnore on individual fields
      * like : @JsonIgnoreProperties({"field1","field2"})
      */
-    @JsonIgnore
+    //@JsonIgnore
     private String field2;
 
     private String field3;
@@ -45,8 +46,6 @@ public class SomeBean {
     public void setField3(String field3) {
         this.field3 = field3;
     }
-
-
 
 
 }
