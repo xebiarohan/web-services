@@ -27,6 +27,12 @@ public class UserJpaResource {
         return repository.findAll();
     }
 
+    @GetMapping("/jpa/users/{id}/posts")
+    public List<Post> retrieveAllPosts(@PathVariable Integer id) {
+        User user = repository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        return user.getPosts();
+    }
+
     @GetMapping("/jpa/users/{id}")
     public EntityModel<User> getUser(@PathVariable Integer id) {
         User user = repository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
