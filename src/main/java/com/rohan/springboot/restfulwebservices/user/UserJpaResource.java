@@ -1,8 +1,8 @@
 package com.rohan.springboot.restfulwebservices.user;
 
+import com.rohan.springboot.restfulwebservices.jpa.PostRepository;
 import com.rohan.springboot.restfulwebservices.jpa.UserRepository;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -11,15 +11,18 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class UserJpaResource {
 
-    @Autowired
     private UserRepository repository;
 
-    public UserJpaResource(UserRepository repository) {
+    private PostRepository postRepository;
+
+    public UserJpaResource(UserRepository repository, PostRepository postRepository) {
         this.repository = repository;
+        this.postRepository = postRepository;
     }
 
     @GetMapping("/jpa/users")
@@ -52,6 +55,16 @@ public class UserJpaResource {
                 .buildAndExpand(createdUser.getId()).toUri();
         return ResponseEntity.created(location).build();
         //return userDaoService.save(user);
+    }
+
+    @PostMapping("/jpa/users/{id}/posts")
+    public ResponseEntity<Void> createPostForUser(@PathVariable Integer id, @Valid @RequestBody Post post) {
+        User user = repository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        post.setUser(user);
+
+        Post createdPost = postRepository.save(post);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @DeleteMapping("/jpa/users/{id}")
