@@ -54,7 +54,6 @@ public class UserJpaResource {
                 .path("/{id}")
                 .buildAndExpand(createdUser.getId()).toUri();
         return ResponseEntity.created(location).build();
-        //return userDaoService.save(user);
     }
 
     @PostMapping("/jpa/users/{id}/posts")
@@ -62,7 +61,7 @@ public class UserJpaResource {
         User user = repository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
         post.setUser(user);
 
-        Post createdPost = postRepository.save(post);
+        postRepository.save(post);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
         return ResponseEntity.created(location).build();
     }
